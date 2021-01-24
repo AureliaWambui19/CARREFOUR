@@ -1,0 +1,146 @@
+---
+title: "association rules"
+author: "Aurelia"
+date: "23/01/2021"
+output: html_document
+---
+
+```{r}
+#INSTALL LIBRARIES
+install.packages('dplyr')
+library(dplyr)
+library(tidyr)
+install.packages("data.table")
+install.packages('lubridate')
+library(lubridate)
+install.packages("tidyverse")
+
+
+
+```
+```{r}
+#INSTALL LIBRARIES
+install.packages('dplyr')
+library(dplyr)
+library(tidyr)
+library(data.table)
+library(lubridate)
+library(tidyverse)
+
+
+
+
+```
+
+```{r}
+df = read_csv("http://bit.ly/SupermarketDatasetII")
+```
+```{r}
+# View sample supermarket data on which we will run association rules
+head(df)
+```
+
+
+```{r}
+# Data dimensions 
+dim(df)
+```
+there are 7500 rows and 20 columns
+
+```{r}
+#Structure 
+str(df)
+```
+```{r}
+summary(df)
+```
+
+```{r}
+# Checking for Missing Values per column
+
+colSums(is.na(df))
+```
+
+```{r}
+# Checking for missing for the whole dataset
+sum(is.na(df))
+```
+
+
+```{r}
+anyDuplicated(df)
+```
+
+
+```{r}
+install.packages("arules")
+```
+
+```{r}
+library(arules)
+```
+
+```{r}
+# Verifying the object's class
+ 
+class(df)
+```
+```{r}
+# Previewing our first 6 transactions
+#
+head(df)
+```
+
+```{r}
+
+# Displaying top 15 most common items in the  dataset 
+
+transact <- as(df, "transactions") 
+# plot item frequency
+itemFrequencyPlot(transact,topN=15,type="absolute")
+```
+```{r}
+# Producing a chart of frequencies  
+
+# ---
+# Displaying top 15 most common items in the  dataset 
+
+# 
+par(mfrow = c(1, 2))
+
+# plot the frequency of items
+itemFrequencyPlot(transact, topN = 15,col="pink")
+
+```
+```{r}
+# Building a model based on association rules 
+# using the apriori function 
+rules <- apriori(df, parameter = list(supp = 0.4, conf = 0.7,target = "rules",minlen=2))
+```
+
+```{r}
+summary(rules)
+```
+Using  support levels of 0.4 and confidence level of 0.7 no rules were generated,will test with support of 0.001 and confidence level of 0.8
+```{r}
+rules1<- apriori(df, parameter = list(supp = 0.001, conf = 0.8,target = "rules",minlen=2))
+```
+
+
+
+
+```{r}
+summary(rules1)
+```
+35 rules were obtained,this indicates that different levels of support and confidence matters when it comes to association mining
+```{r}
+# observing first 15  model rules
+inspect(rules1[1:15])
+```
+
+```{r}
+rules<-sort(rules, by="confidence", decreasing=TRUE)
+inspect(rules1[1:15])
+```
+
+it is observed that someone who buys olive oil has a 100% chance of buying cottage cheese and milk

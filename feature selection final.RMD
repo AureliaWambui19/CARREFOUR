@@ -1,0 +1,250 @@
+---
+title: "SUPERMARKET 1"
+author: "Aurelia"
+date: "23/01/2021"
+output: html_document
+---
+
+```{r}
+#INSTALL LIBRARIES
+install.packages('dplyr')
+library(dplyr)
+library(tidyr)
+install.packages("datatable")
+install.packages('lubridate')
+library(lubridate)
+
+
+install.packages("DataExplorer") 
+ 
+install.packages("corrplot") 
+install.packages("factoextra") 
+
+```
+
+
+```{r}
+library("data.table") 
+
+
+library(tidyverse) 
+
+library(warn = -1) 
+
+library(ggplot2) 
+library(lattice)
+library(corrplot) 
+library(DataExplorer) 
+
+library(magrittr) 
+```
+
+```{r}
+# loading the dataset
+
+df = read_csv('http://bit.ly/CarreFourDataset')
+```
+
+```{r}
+# Checking the top observations
+
+head(df)
+```
+
+```{r}
+# Checking the bottom observations
+
+tail(df)
+```
+
+```{r}
+# Viewing the structure of the dataset
+# ---
+#
+str(df)
+```
+```{r}
+# Viewing the statistical summary of the dataset
+# ---
+# 
+summary(df)
+```
+
+```{r}
+# Viewing the dimension of  dataset
+dim(df)
+```
+There are 1000 rows and 16 columns
+
+# Data cleaning
+
+```{r}
+# Checking for Missing Values per column
+
+colSums(is.na(df))
+```
+```{r}
+# Checking for missing for the whole dataset
+sum(is.na(df))
+```
+there are no misssing values
+
+```{r}
+# different ways of visualizing missing data
+
+plot_missing(df)
+```
+```{r}
+install.packages("naniar")
+library(naniar)
+gg_miss_var(df)
+```
+
+```{r}
+#look out for duplicates
+
+anyDuplicated(df)
+```
+there are no duplicates
+```{r}
+df_num<-select_if(df, is.numeric)
+df_num
+```
+
+
+```{r}
+boxplot(df_num$Tax,col = "pink",main = "Tax",border = "brown",xlab="tax",horizontal = T)
+```
+```{r}
+boxplot(df_num$Rating,col = "pink",main = "Rating",border = "brown",xlab="Rating",horizontal = T)
+```
+```{r}
+boxplot(df_num$Total,col = "pink",main = "Total",border = "brown",xlab="Total",horizontal = T)
+```
+```{r}
+# Checking the column names
+names(df)
+# Replacing spaces in the columns names with an underscore
+names(df) <- gsub(" ", "_", names(df))
+# Confirming the columns names have changed
+names(df)
+```
+
+
+
+```{r}
+#checking numeric variables after change of column names
+df_numeric<-select_if(df, is.numeric)
+df_numeric
+```
+
+
+
+
+
+
+
+```{r}
+
+library(clustvarsel)
+```
+
+```{r}
+
+install.packages("mclust")
+library(mclust)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+# Boruta is a feature ranking and selection algorithm based on random forests algorithm.
+library(Boruta)
+```
+
+```{r}
+str(df_numeric)
+```
+
+```{r}
+#Perform Boruta search
+#The Boruta algorithm is a wrapper built around the random forest classification algorithm. #It tries to capture all the important, interesting features you might have in your dataset #with respect to an outcome variable.
+ #maxRuns is the number of times the algorithm is run. The higher the maxRuns the more  #selective you get in picking the variables. The default value is 100
+#boruta for numeric variables
+boruta_output <- Boruta(Unit_price~., data=df_numeric,doTrace=0)  
+```
+
+```{r}
+boruta_output
+```
+```{r}
+# Plot variable importance
+plot(boruta_output, cex.axis=.7, las=2, xlab="", main="Variable Importance")  
+```
+```{r}
+boruta.output <- attStats(boruta_output)
+boruta.output
+```
+```{r}
+str(df)
+```
+
+
+```{r}
+ # boruta for the whole dataset
+boruta_output <- Boruta(Total~., data=df,doTrace=0)  
+```
+
+
+```{r}
+boruta_output
+```
+```{r}
+boruta.output <- attStats(boruta_output)
+boruta.output
+```
+```{r}
+# Plot variable importance
+plot(boruta_output, cex.axis=.7, las=2, xlab="", main="Variable Importance") 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

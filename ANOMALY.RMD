@@ -1,0 +1,175 @@
+---
+title: "Untitled"
+author: "Aurelia"
+date: "24/01/2021"
+output: html_document
+---
+
+```{r}
+
+install.packages('dplyr')
+library(dplyr)
+library(tidyr)
+install.packages("datatable")
+install.packages('lubridate')
+library(lubridate)
+
+install.packages("rtools")
+install.packages("DataExplorer") 
+install.packages("Hmisc") 
+install.packages("pastecs")
+install.packages("psych") 
+install.packages("corrplot") 
+install.packages("factoextra") 
+install.packages("caret")
+```
+```{r}
+library("data.table") 
+
+
+library(tidyverse) 
+
+library(warn = -1) 
+
+library(ggplot2) 
+library(lattice)
+library(corrplot) 
+library(DataExplorer) 
+
+library(magrittr) 
+```
+
+
+```{r}
+# loading dataset
+market = read_csv('http://bit.ly/CarreFourSalesDataset')
+```
+
+```{r}
+# Checking the top observations
+
+head(market)
+```
+
+```{r}
+# Checking the bottom observations
+
+tail(market)
+```
+
+```{r}
+# Viewing the structure of the dataset
+# ---
+#
+str(market)
+```
+```{r}
+# Viewing the statistical summary of the dataset
+# ---
+# 
+summary(market)
+```
+```{r}
+# Viewing the dimension of  dataset
+dim(market)
+```
+
+there are 1000 rows and 2 columns
+
+```{r}
+# Checking for Missing Values per column
+
+colSums(is.na(market))
+```
+
+```{r}
+# Checking for missing for the whole dataset
+sum(is.na(market))
+```
+there are no missing values
+
+```{r}
+#look out for duplicates
+
+anyDuplicated(market)
+```
+there are no duplicates
+
+```{r}
+# totalling the sales based on dates 
+sales <- aggregate(market$Sales, by = list(Date = market$Date), FUN = sum)
+head(sales)
+```
+
+```{r}
+# getting a data frame of dates frequeny
+tablefrequency <- data.frame(table(market$Date))
+head(tablefrequency)
+```
+
+```{r}
+# combining both data frames 
+carry <- merge(sales,tablefrequency, by.x = "Date", by.y = "Var1")
+carry
+```
+
+
+```{r}
+# renaming the columns names
+names(carry) <- c("Date", "Total.Sales", "Count.Sales") 
+head(carry)
+```
+```{r}
+# changing the Date column to Date format
+carry$Date <- mdy(carry$Date) 
+str(carry)
+```
+```{r}
+library(tibble)
+#carry$Date <- as_tbl_time(carry, index = 'Date') 
+str(carry$Date)
+```
+```{r}
+class(carry)
+```
+```{r}
+typeof(carry)
+```
+
+```{r}
+install.packages("anomalize")
+library(anomalize)
+
+```
+```{r}
+#carry %>% 
+  
+ # time_decompose(count) %>%
+  #anomalize(remainder) %>% 
+  #time_recompose() %>% 
+  #plot_anomalies(time_recomposed = TRUE, ncol = 3, alpha_dots = 0.5)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
